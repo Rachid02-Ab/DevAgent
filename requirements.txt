@@ -4,3 +4,4 @@ openai
 tiktoken
 mistral
 langchain_community
+langgraph
