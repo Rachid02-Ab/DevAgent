@@ -3,3 +3,4 @@ langchain
 openai
 tiktoken
 mistral
+langchain_community
