@@ -1,10 +1,13 @@
 # Nouvelle version interactive avec exécution pas-à-pas et mode explicatif
 import streamlit as st
-from agent.devagent_graph import run_dev_agent
 import difflib
 import time
 from io import StringIO
 import datetime
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from agent.devagent_graph import run_dev_agent
 
 st.set_page_config(page_title="DevAgent", page_icon="🤖", layout="centered")
 
