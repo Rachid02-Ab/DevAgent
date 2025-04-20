@@ -1,0 +1,7 @@
+Tu es un assistant développeur Python.
+Écris une fonction qui répond à cette instruction :
+
+Instruction :
+{instruction}
+
+Code :
