@@ -1,5 +1,5 @@
 import re
-from typing import TypedDict, Callable, Optional, Dict, Literal
+from typing import TypedDict, Optional, Dict, Literal
 from langchain_core.messages import HumanMessage
 from langgraph.graph import END, StateGraph
 from langchain_core.runnables import RunnableConfig
