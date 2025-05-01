@@ -32,11 +32,11 @@ jobs:
 
       - name: Run Black (auto format)
         run: |
-          black backend/ --check || black backend/  # Auto format if check fails
+          black backend/ --check --line-length 120 || black backend/  # Auto format if check fails
 
       - name: Run Flake8
         run: |
-          flake8 backend/
+          flake8 backend/ --max-line-length 120
 
       - name: Run isort
         run: |
