@@ -28,19 +28,22 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov httpx
 
-      - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=${{ github.workspace }}/backend" >> $GITHUB_ENV
+      - name: Rename test.py if needed (avoid conflict)
+        run: |
+          if [ -f backend/test/test.py ]; then
+            mv backend/test/test.py backend/test/test_app.py
+          fi
 
       - name: Run tests
         run: |
           pytest backend/test/ --cov=backend --cov-report=xml -v
 
-      - name: Upload coverage
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         if: success()
         with:
           file: ./coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}  # facultatif si token privé
+          token: ${{ secrets.CODECOV_TOKEN }}  # facultatif si repo public
 
   lint:
     name: Lint Code
@@ -60,13 +63,17 @@ jobs:
           pip install black flake8 isort mypy
 
       - name: Run Black formatting check
-        run: black --check backend/
+        run: |
+          black --check backend/
 
       - name: Run Flake8
-        run: flake8 backend/
+        run: |
+          flake8 backend/
 
       - name: Run isort
-        run: isort --check-only backend/
+        run: |
+          isort --check-only backend/
 
       - name: Run mypy
-        run: mypy backend/
+        run: |
+          mypy backend/
