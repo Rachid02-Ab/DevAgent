@@ -10,8 +10,8 @@ env:
   PYTHON_VERSION: "3.10"
 
 jobs:
-  lint:
-    name: Lint Code
+  lint_and_test:
+    name: Lint Code and Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +22,17 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
       - name: Install linters
         run: |
-          pip install black flake8 isort mypy
+          pip install black flake8 isort mypy pytest
 
       - name: Run Black (auto format)
         run: |
-          black backend/
+          black backend/ --check || black backend/  # Auto format if check fails
 
       - name: Run Flake8
         run: |
@@ -36,8 +40,12 @@ jobs:
 
       - name: Run isort
         run: |
-          isort backend/
+          isort backend/ --check-only
 
       - name: Run mypy
         run: |
           mypy backend/
+
+      - name: Run Tests
+        run: |
+          pytest backend/test --maxfail=1 --disable-warnings -q

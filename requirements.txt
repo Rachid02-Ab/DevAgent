@@ -1,10 +1,15 @@
 streamlit
 fastapi
 langchain-openai
-uvicorn
 langchain
 openai
 tiktoken
+uvicorn
+pytest
+black
+flake8
+isort
+mypy
 mistral
 langchain_community
 langgraph
