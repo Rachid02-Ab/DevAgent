@@ -66,7 +66,24 @@ L'agent vérifie l’état de sortie (succès ou erreur) avant de continuer l'ex
 - L'agent commence par générer du code.
 - Si une erreur est détectée lors de l'exécution, il tente de corriger le code.
 - Si la correction échoue après trois tentatives, l'agent termine l'exécution.
+- 
+Les tests sont implémentés dans `backend/test/` avec pytest et couvrent :
 
+### `test_app.py`
+- **Test des endpoints API** :
+  - `test_run_endpoint_success` : Vérifie la génération de code valide
+  - `test_run_endpoint_empty_instruction` : Test le rejet des instructions vides
+  - `test_run_endpoint_invalid_payload` : Vérifie la validation des payloads
+
+- **Gestion des erreurs** :
+  - `test_run_endpoint_error_handling` : Test diverses erreurs de code
+  - `test_max_attempts_handling` : Vérifie la limite de tentatives
+
+- **Modèles de données** :
+  - `test_code_response_model` : Valide le schéma de réponse
+
+- **Cas spéciaux** :
+  - `test_special_characters_handling` : Test l'encodage UTF-8
 ### Technologies utilisées avec Langchain :
 
 - **Mistral (mistral-large-latest)** : Un modèle de génération de code en langage naturel, utilisé pour produire du code Python bien structuré et commenté.
