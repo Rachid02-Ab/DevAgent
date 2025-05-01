@@ -66,7 +66,7 @@ L'agent vérifie l’état de sortie (succès ou erreur) avant de continuer l'ex
 - L'agent commence par générer du code.
 - Si une erreur est détectée lors de l'exécution, il tente de corriger le code.
 - Si la correction échoue après trois tentatives, l'agent termine l'exécution.
-- 
+ 
 Les tests sont implémentés dans `backend/test/` avec pytest et couvrent :
 
 ### `test_app.py`
@@ -94,5 +94,25 @@ Les tests sont implémentés dans `backend/test/` avec pytest et couvrent :
 ## 🔧 Architecture de l'Agent via FastAPI
 
 L'agent est accessible via une API FastAPI qui permet de recevoir des requêtes HTTP et de renvoyer les résultats sous forme de réponses JSON.
+
+# 🔄 CI Pipeline (GitHub Actions)
+
+Notre workflow automatisé dans `.github/workflows/ci.yml` :
+
+## Étapes Principales
+
+### 1. Tests Automatisés :
+
+- **Installation Python 3.10**
+- **Exécution des tests** avec pytest et couverture
+- **Upload des résultats** vers Codecov
+
+### 2. Linting :
+
+- **Vérification Black** (formatage)
+- **Analyse Flake8** (qualité de code)
+- **Vérification isort** (imports)
+- **Typage statique** avec mypy
+
 
 
