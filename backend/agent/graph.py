@@ -6,7 +6,7 @@ from langchain_core.runnables import RunnableConfig
 
 from .tools.python_executor import python_execution_tool
 from .llm import get_mistral_llm
-from ..config import settings
+from config import settings
 
 class AgentState(TypedDict):
     """État de l'agent pendant l'exécution du graphe"""
@@ -47,16 +47,49 @@ def generate_code(state: AgentState, config: Optional[RunnableConfig] = None) ->
     Tu es un expert Python. Génère du code pour accomplir la tâche suivante.
     Tâche: {instruction}
     
-    Règles:
-    - Retourne uniquement le code sans explications
-    - Ajoute des commentaires clairs si nécessaire
-    - Respecte les bonnes pratiques PEP 8
-    - Gère les cas d'erreur potentiels
+    Instructions pour la génération du code:
+    
+    1. Structure du code:
+       - Commence par une docstring explicative
+       - Organise le code de manière logique
+       - Utilise des noms de variables descriptifs
+    
+    2. Documentation:
+       - Ajoute des commentaires détaillés pour expliquer:
+         * Le but de chaque fonction/classe
+         * Les paramètres et leur utilisation
+         * Les valeurs de retour
+         * Les cas particuliers et limitations
+    
+    3. Gestion des erreurs:
+       - Implémente une gestion d'erreurs robuste
+       - Ajoute des messages d'erreur explicatifs
+       - Vérifie les entrées utilisateur
+    
+    4. Format de réponse:
+    ```python
+    # === DESCRIPTION ===
+    # Explication détaillée de la solution
+    
+    # === CODE ===
+    [Le code ici avec commentaires détaillés]
+    ```
+    
+    5. Bonnes pratiques:
+       - Suis les conventions PEP 8
+       - Utilise des types hints quand c'est pertinent
+       - Assure la lisibilité et la maintenabilité
     """
     
     try:
         response = llm.invoke([HumanMessage(content=prompt)], config=config)
         code = force_utf8(response.content)
+        
+        # Extraction du code uniquement
+        if "# === CODE ===" in code:
+            code_parts = code.split("# === CODE ===")
+            code = code_parts[1].strip()
+            
         status = "generating"
     except Exception as e:
         code = f"# Erreur lors de la génération: {force_utf8(str(e))}"
@@ -88,14 +121,41 @@ def fix_code(state: AgentState, config: Optional[RunnableConfig] = None) -> Agen
     {state['output']}
     
     Instructions:
-    - Corrige le code en conservant la fonctionnalité originale
-    - Explique brièvement les corrections (en commentaires)
-    - Gère tous les cas d'erreur possibles
+    1. Analyse détaillée de l'erreur:
+       - Explique la cause principale de l'erreur
+       - Identifie les lignes problématiques
+       - Décris l'impact sur le fonctionnement du code
+    
+    2. Correction du code:
+       - Propose une solution détaillée
+       - Ajoute des commentaires explicatifs pour chaque correction
+       - Implémente des vérifications pour éviter des erreurs similaires
+    
+    3. Format de réponse:
+    ```python
+    # === ANALYSE DE L'ERREUR ===
+    # Explication détaillée de l'erreur et de sa cause
+    
+    # === CODE CORRIGÉ ===
+    # Solution implémentée avec commentaires
+    [Le code corrigé ici]
+    ```
+    
+    4. Bonnes pratiques:
+       - Assure-toi que le code suit PEP 8
+       - Ajoute de la gestion d'erreurs appropriée
+       - Maintiens la lisibilité du code
     """
     
     try:
-        fixed_code = llm.invoke([HumanMessage(content=prompt)], config=config).content
-        fixed_code = force_utf8(fixed_code)
+        response = llm.invoke([HumanMessage(content=prompt)], config=config)
+        fixed_code = force_utf8(response.content)
+        
+        # Extraction du code corrigé uniquement (ignore l'analyse)
+        if "# === CODE CORRIGÉ ===" in fixed_code:
+            code_parts = fixed_code.split("# === CODE CORRIGÉ ===")
+            fixed_code = code_parts[1].strip()
+        
         status = "fixing"
     except Exception as e:
         fixed_code = f"# Erreur lors de la correction: {force_utf8(str(e))}"

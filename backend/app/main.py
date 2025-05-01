@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from .schemas import CodeRequest, CodeResponse
-from ..agent.graph import run_dev_agent
+from agent.graph import run_dev_agent
 
 app = FastAPI(
     title="DevAgent API",
@@ -12,12 +12,12 @@ app = FastAPI(
 def generate_code(request: CodeRequest):
     try:
         result = run_dev_agent(request.instruction)
-        code, output = result.split("# Résultat d'exécution :", 1)
-        
+
         return CodeResponse(
-            code=code.strip(),
-            output=output.strip(),
-            full_result=result.strip()
+            code=result["code"].strip(),
+            output=result["output"].strip(),
+            full_result=result["full_result"].strip()
         )
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Erreur serveur : {str(e)}")

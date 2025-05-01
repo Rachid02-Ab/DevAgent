@@ -10,6 +10,19 @@
 ---
 
 ## 🚀 Démo rapide
+![Demo GIF](demo/agent-demo-code.gif)
+
+## Améliorations apportées au code
+
+Le code original présentait plusieurs problèmes qui ont été corrigés :
+
+1. **Division par zéro** : La fonction `calculer_salaire_moyen` ne vérifiait pas si la liste des employés était vide, risquant une erreur de division par zéro.
+
+2. **Méthode vs attribut** : Utilisation incorrecte de `e.age_retraite` comme attribut alors qu'il s'agit d'une méthode (`e.age_retraite()`).
+
+3. **Variable non définie** : Dans `employe_plus_ancien`, la variable `ancien` n'était pas définie si la liste était vide.
+
+Ces corrections ont amélioré la robustesse et la fiabilité du code.
 
 ```bash
 streamlit run app/streamlit_interface.py

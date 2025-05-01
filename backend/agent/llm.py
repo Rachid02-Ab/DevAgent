@@ -1,5 +1,4 @@
-from langchain.chat_models import ChatOpenAI
-
+from langchain_openai import ChatOpenAI
 def get_mistral_llm():
     return ChatOpenAI(
         base_url="https://api.mistral.ai/v1",
