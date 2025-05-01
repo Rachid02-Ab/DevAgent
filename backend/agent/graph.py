@@ -9,7 +9,6 @@ from .llm import get_mistral_llm
 from config import settings
 
 class AgentState(TypedDict):
-    """État de l'agent pendant l'exécution du graphe"""
     instruction: str
     code: str
     output: str
@@ -110,7 +109,6 @@ def execute_code(state: AgentState, config: Optional[RunnableConfig] = None) -> 
     return {**state, "output": result, "status": status}
 
 def fix_code(state: AgentState, config: Optional[RunnableConfig] = None) -> AgentState:
-    """Tente de corriger le code en fonction des erreurs d'exécution"""
     llm = get_mistral_llm()
     
     prompt = f"""
