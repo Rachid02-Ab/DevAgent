@@ -37,6 +37,7 @@ jobs:
       if: success()
       with:
         file: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}  # Optionnel : ajouter votre token Codecov si nécessaire
 
   lint:
     name: Lint Code
