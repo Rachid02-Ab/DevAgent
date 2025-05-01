@@ -15,29 +15,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-cov httpx
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov httpx
 
-    - name: Run tests
-      run: |
-        pytest backend/test/ --cov=backend --cov-report=xml -v
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/backend" >> $GITHUB_ENV
 
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
-      if: success()
-      with:
-        file: ./coverage.xml
-        token: ${{ secrets.CODECOV_TOKEN }}  # Optionnel : ajouter votre token Codecov si nécessaire
+      - name: Run tests
+        run: |
+          pytest backend/test/ --cov=backend --cov-report=xml -v
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        if: success()
+        with:
+          file: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}  # facultatif si token privé
 
   lint:
     name: Lint Code
@@ -45,29 +48,25 @@ jobs:
     needs: test
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Install linters
-      run: |
-        pip install black flake8 isort mypy
+      - name: Install linters
+        run: |
+          pip install black flake8 isort mypy
 
-    - name: Run Black formatting check
-      run: |
-        black --check backend/
+      - name: Run Black formatting check
+        run: black --check backend/
 
-    - name: Run Flake8
-      run: |
-        flake8 backend/
+      - name: Run Flake8
+        run: flake8 backend/
 
-    - name: Run isort
-      run: |
-        isort --check-only backend/
+      - name: Run isort
+        run: isort --check-only backend/
 
-    - name: Run mypy
-      run: |
-        mypy backend/
+      - name: Run mypy
+        run: mypy backend/
