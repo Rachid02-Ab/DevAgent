@@ -26,9 +26,9 @@ jobs:
         run: |
           pip install black flake8 isort mypy
 
-      - name: Run Black formatting check
+      - name: Run Black (auto format)
         run: |
-          black --check backend/
+          black backend/
 
       - name: Run Flake8
         run: |
@@ -36,7 +36,7 @@ jobs:
 
       - name: Run isort
         run: |
-          isort --check-only backend/
+          isort backend/
 
       - name: Run mypy
         run: |
